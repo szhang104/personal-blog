@@ -1,10 +1,29 @@
 module.exports = {
   siteMetadata: {
-    title: `Gatsby Default Starter`,
-    description: `Kick off your next, great Gatsby project with this default starter. This barebones starter ships with the main Gatsby configuration files you might need.`,
-    author: `@gatsbyjs`,
+    title: `Biased Representations`,
+    description: `A personal blog and documents on programming, math and networks`,
+    author: `sz`,
+    siteUrl: `http://localhost:8080/`,
+    social: {
+      twitter: `000`,
+    },
   },
   plugins: [
+    // {
+    //   resolve: `gatsby-transformer-asciidoc`,
+    //   options: {
+  		//   attributes: {
+  		// 	 showtitle: true,
+  		//   },
+    //   },
+    // },
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        path: `content/posts/`,
+        name: "posts"
+      }
+    },
     `gatsby-plugin-react-helmet`,
     {
       resolve: `gatsby-source-filesystem`,
