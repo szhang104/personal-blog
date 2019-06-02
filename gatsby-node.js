@@ -1,7 +1,7 @@
 const path = require(`path`)
 const { createFilePath } = require(`gatsby-source-filesystem`);
 const asciidoctor = require(`asciidoctor`)();
-const katex = require('katex');
+// const katex = require('katex');
 
 class ReactAsciidocConverter {
   constructor () {
@@ -9,38 +9,56 @@ class ReactAsciidocConverter {
   }
 
   convert (node, transform) {
-    // if (node.getNodeName() === 'paragraph') {
-    //   return `<p>${node.getContent()}</p>`;
-    // }
-    let content = "";
-    if (node.getNodeName() === 'stem' || node.getNodeName() === `latexmath` ) {
+    let content = "", text = "", res = "";
+    switch(node.getNodeName()) {
+      
+      // case "section":
+      //   content = node.getContent();
+      //   res = `<section>${content}</section>`;
+      //   break;
+
+      // case "paragraph":
+      //   res = `<p>${node.content}</p>`;
+      //   break;
+
       // corresponds to display math
       // essentially a asciidoc block
       // generate a virtual DOM according to
       // https://github.com/MatejBransky/react-katex
-      content = node.getContent();
-      console.log(content);
-      return katex.renderToString(content, {
-        throwOnError: false,
-        displayMode: true,
-      });
-    }
-    if (node.getNodeName() === 'inline_quoted') {
+      case "stem":
+      case "latexmath":
+        // content = node.getContent();
+        // res = katex.renderToString(content, {
+        //   throwOnError: false,
+        //   displayMode: true,
+        // });
+        // defer to the react-katex
+        res = `<div class='block-math'>${node.getContent()}</div>`;
+        break;
+
+
       // asciidoctor treats inline math as inline_quoted node.
       // node.getContent() does not seem to work
       // search $convert_inline_quoted in asciidoctor.js
-      content = node.text;
-      if (node.type == 'latexmath') {
-        return katex.renderToString(content, {
-          throwOnError: false,
-          displayMode: false,
-      });
-      }
-      return this.baseConverter.convert(node, transform) 
+      case "inline_quoted":
+        if (node.type == 'latexmath' || node.type == 'stem') {
+          // text = node.text;
+          // res = katex.renderToString( text, {
+          //   throwOnError: false,
+          //   displayMode: false,
+          // });
+          res = `<div class='inline-math'>${node.text}</div>`;
+          break;
+        }
+
+      // default is the vanilla html5 converter
+      default:
+        res = this.baseConverter.convert(node, transform);
     }
-    return this.baseConverter.convert(node, transform) 
+      return res;
   }
 }
+
 asciidoctor.ConverterFactory.register(new ReactAsciidocConverter(), ['html5']);
 
 exports.createPages = ({ graphql, actions }) => {
