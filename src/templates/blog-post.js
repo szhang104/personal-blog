@@ -2,7 +2,11 @@ import React from "react"
 import { Link, graphql } from "gatsby"
 import Layout from "../components/layout"
 import SEO from "../components/seo"
+import {Helmet} from "react-helmet";
+
+// aesthetics
 import { rhythm, scale } from "../utils/typography"
+import {Title, Main} from "../components/common";
 
 // math display using katex
 import 'katex/dist/katex.min.css'; // without it can't display
@@ -13,17 +17,33 @@ import TeX from '@matejmazur/react-katex';
 
 // to avoid using the dangerouslysetinnterhtml; use this to tranform a string of html tags to React elements
 import ReactHtmlParser from 'react-html-parser';
+import { convertNodeToElement } from 'react-html-parser';
+// import generatePropsFromAttributes from 'react-html-parser/utils/generatePropsFromAttributes';
+
+const crypto = require('crypto');
+const str_hash_f = x => {
+  console.log(x);
+  return crypto.createHash("sha256").update(x, "binary").digest("base64");
+}
 
 
-// used by reacthtmlparser for custom node translation
-function transform(node) {
+
+// used by reacthtmlparser for custom node translation; tranform should return a valid React component or null
+function transform(node, index) {
   if (node.type === 'tag' && node.name === 'div' && node.attribs !== undefined && node.attribs.class === 'inline-math') {
     return React.createElement(TeX, {}, node.children[0].data);
   }
   if (node.type === 'tag' && node.name === 'div' && node.attribs !== undefined && node.attribs.class === 'block-math') {
     return React.createElement(TeX, {block: true }, node.children[0].data);
   }
+  // if (node.type === 'tag' && node.name === 'li') {
+  //   let p_children = node.children.filter( x => x.type == 'tag' && x.name == 'p')
+  //   node.attribs["key"] = str_hash_f(p_children[0].children[0].data);
+  //   return convertNodeToElement(node, index, transform);
+  // }
 }
+
+
 
 // <div dangerouslySetInnerHTML={{ __html: post.html }} />
 class BlogPostTemplate extends React.Component {
@@ -39,11 +59,15 @@ class BlogPostTemplate extends React.Component {
     
     return (
       <Layout location={this.props.location} title={siteTitle}>
+      <Helmet>    
+        <link rel="stylesheet" type="text/css"  href="https://rsms.me/inter/inter.css" />
+      </Helmet>
         <SEO
           title={post_title}
           description={post_description}
         />
-        <h1>{post_title}</h1>
+        <Main>
+        <Title>{post_title}</Title>
         <p className="meta">{post_date + " by " + post_authors[0]}</p>
         <div> {ReactHtmlParser(post.html, {
           transform: transform,
@@ -79,34 +103,11 @@ class BlogPostTemplate extends React.Component {
             )}
           </li>
         </ul>
-
+        </Main>
       </Layout>
     )
   }
 
-//   componentDidMount() {
-//     document.addEventListener('copy', function(event) {
-//     const selection = window.getSelection();
-//     if (selection.isCollapsed) {
-//         return;  // default action OK if selection is empty
-//     }
-//     const fragment = selection.getRangeAt(0).cloneContents();
-//     if (!fragment.querySelector('.katex-mathml')) {
-//         return;  // default action OK if no .katex-mathml elements
-//     }
-//     // Preserve usual HTML copy/paste behavior.
-//     const html = [];
-//     for (let i = 0; i < fragment.childNodes.length; i++) {
-//         html.push(fragment.childNodes[i].outerHTML);
-//     }
-//     event.clipboardData.setData('text/html', html.join(''));
-//     // Rewrite plain-text version.
-//     event.clipboardData.setData('text/plain',
-//         katexReplaceWithTex(fragment).textContent);
-//     // Prevent normal copy handling.
-//     event.preventDefault();
-// });
-//   } 
 }
 
 export default BlogPostTemplate

@@ -10,7 +10,10 @@ import PropTypes from "prop-types"
 import { StaticQuery, graphql } from "gatsby"
 
 import Header from "./header"
-import "./layout.css"
+import {GlobalStyle, theme} from "./common"
+import {ThemeProvider} from 'styled-components';
+
+// import "./layout.css"
 
 const Layout = ({ children }) => (
   <StaticQuery
@@ -24,7 +27,9 @@ const Layout = ({ children }) => (
       }
     `}
     render={data => (
+      <ThemeProvider theme={theme}>
       <>
+        <GlobalStyle />
         <Header siteTitle={data.site.siteMetadata.title} />
         <div
           style={{
@@ -42,6 +47,7 @@ const Layout = ({ children }) => (
           </footer>
         </div>
       </>
+      </ThemeProvider>
     )}
   />
 )
