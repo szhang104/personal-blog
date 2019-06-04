@@ -1,7 +1,7 @@
 module.exports = {
   siteMetadata: {
-    title: `Biased Representations`,
-    description: `A personal blog and documents on programming, math and networks`,
+    title: `<em>Biased</em> Representations`,
+    description: `Because who live their lives <em>in expection</em>?`,
     author: `sz`,
     siteUrl: `http://localhost:8080/`,
     social: {
@@ -12,9 +12,9 @@ module.exports = {
     // {
     //   resolve: `gatsby-transformer-asciidoc`,
     //   options: {
-  		//   attributes: {
-  		// 	 showtitle: true,
-  		//   },
+    //   attributes: {
+    // 	 showtitle: true,
+    //   },
     //   },
     // },
     {
@@ -50,4 +50,4 @@ module.exports = {
     // To learn more, visit: https://gatsby.dev/offline
     // `gatsby-plugin-offline`,
   ],
-}
+};

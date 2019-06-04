@@ -1,4 +1,4 @@
-const path = require(`path`)
+const path = require(`path`);
 const { createFilePath } = require(`gatsby-source-filesystem`);
 const asciidoctor = require(`asciidoctor`)();
 // const katex = require('katex');
@@ -41,7 +41,7 @@ class ReactAsciidocConverter {
       // node.getContent() does not seem to work
       // search $convert_inline_quoted in asciidoctor.js
       case "inline_quoted":
-        if (node.type == 'latexmath' || node.type == 'stem') {
+        if (node.type === 'latexmath' || node.type === 'stem') {
           // text = node.text;
           // res = katex.renderToString( text, {
           //   throwOnError: false,
@@ -62,9 +62,9 @@ class ReactAsciidocConverter {
 asciidoctor.ConverterFactory.register(new ReactAsciidocConverter(), ['html5']);
 
 exports.createPages = ({ graphql, actions }) => {
-  const { createPage } = actions
+  const { createPage } = actions;
 
-  const blogPost = path.resolve(`./src/templates/blog-post.js`)
+  const blogPost = path.resolve(`./src/templates/blog-post.js`);
   return graphql(
     `
       {
@@ -91,11 +91,11 @@ exports.createPages = ({ graphql, actions }) => {
     }
 
     // Create blog posts pages.
-    const posts = result.data.allAsciidoc.edges
+    const posts = result.data.allAsciidoc.edges;
 
     posts.forEach((post, index) => {
-      const previous = index === posts.length - 1 ? null : posts[index + 1].node
-      const next = index === 0 ? null : posts[index - 1].node
+      const previous = index === posts.length - 1 ? null : posts[index + 1].node;
+      const next = index === 0 ? null : posts[index - 1].node;
 
       createPage({
         path: post.node.fields.slug,
@@ -106,17 +106,17 @@ exports.createPages = ({ graphql, actions }) => {
           next,
         },
       })
-    })
+    });
 
     return null
   })
-}
+};
 
 
  const onCreateNode = (arg1) => {
   let { node, actions, getNode } = arg1;
   // modify the node that is a an asciidocpost, add a node field 'slug'
-  if (node.internal.type == `File` && [`adoc`, `asciidoc`].includes(node.extension)) {
+  if (node.internal.type === `File` && [`adoc`, `asciidoc`].includes(node.extension)) {
     return createAsciidocNode(arg1);
   }
   if (node.internal.type === `Asciidoc`) {
@@ -127,7 +127,7 @@ exports.createPages = ({ graphql, actions }) => {
       value,
     });
   }
-}
+};
 
 
 
@@ -144,7 +144,7 @@ async function createAsciidocNode({
 
 
   const content = await loadNodeContent(node); // yield
-  const asciidocOptions = {}
+  const asciidocOptions = {};
   let doc = await asciidoctor.load(content, asciidocOptions); // doc may be modified, yield
 
   try {
@@ -174,6 +174,7 @@ async function createAsciidocNode({
         title: title.getCombined(),
         authors: authors ? authors.map(x => x.getName()) : [],
         date: revision.getDate(),
+        excerpt: "I said this",
       },
       title,
       revision,
@@ -201,4 +202,4 @@ const extractPageAttributes = allAttributes => Object.entries(allAttributes).red
   return pageAttributes;
 }, {});
 
-exports.onCreateNode = onCreateNode
+exports.onCreateNode = onCreateNode;

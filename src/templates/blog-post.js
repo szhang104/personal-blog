@@ -1,12 +1,10 @@
 import React from "react"
-import { Link, graphql } from "gatsby"
+import { graphql } from "gatsby"
 import Layout from "../components/layout"
 import SEO from "../components/seo"
-import {Helmet} from "react-helmet";
 
 // aesthetics
-import { rhythm, scale } from "../utils/typography"
-import {Title, Main} from "../components/common";
+import {Title, Main, NavBottom} from "../components/common";
 
 // math display using katex
 import 'katex/dist/katex.min.css'; // without it can't display
@@ -17,14 +15,14 @@ import TeX from '@matejmazur/react-katex';
 
 // to avoid using the dangerouslysetinnterhtml; use this to tranform a string of html tags to React elements
 import ReactHtmlParser from 'react-html-parser';
-import { convertNodeToElement } from 'react-html-parser';
+// import { convertNodeToElement } from 'react-html-parser';
 // import generatePropsFromAttributes from 'react-html-parser/utils/generatePropsFromAttributes';
 
 const crypto = require('crypto');
 const str_hash_f = x => {
   console.log(x);
   return crypto.createHash("sha256").update(x, "binary").digest("base64");
-}
+};
 
 
 
@@ -48,62 +46,28 @@ function transform(node, index) {
 // <div dangerouslySetInnerHTML={{ __html: post.html }} />
 class BlogPostTemplate extends React.Component {
   render() {
-    const siteTitle = this.props.data.site.siteMetadata.title
-    const { previous, next } = this.props.pageContext
-    const post = this.props.data.asciidoc
-    const post_title = post.document.title
-    const post_date = post.document.date
-    const post_description = "nothing yet"
-    const post_authors = post.document.authors
+    const siteTitle = this.props.data.site.siteMetadata.title;
+    const { previous, next } = this.props.pageContext;
+    const post = this.props.data.asciidoc;
+    const post_title = post.document.title;
+    const post_date = post.document.date;
+    const post_description = "nothing yet";
+    const post_authors = post.document.authors;
     const rendered = post.html;
     
     return (
       <Layout location={this.props.location} title={siteTitle}>
-      <Helmet>    
-        <link rel="stylesheet" type="text/css"  href="https://rsms.me/inter/inter.css" />
-      </Helmet>
         <SEO
           title={post_title}
           description={post_description}
         />
-        <Main>
-        <Title>{post_title}</Title>
-        <p className="meta">{post_date + " by " + post_authors[0]}</p>
-        <div> {ReactHtmlParser(post.html, {
+        <Title id='article_title'>{post_title}</Title>
+        <p id="meta_info">{post_date + " by " + post_authors[0]}</p>
+        <Main>{ReactHtmlParser(rendered, {
           transform: transform,
-        })} </div>
-        <hr
-          style={{
-            marginBottom: rhythm(1),
-          }}
-        />
-        <p> <TeX>\int_0^\infty x^2 dx</TeX> </p>
-
-        <ul
-          style={{
-            display: `flex`,
-            flexWrap: `wrap`,
-            justifyContent: `space-between`,
-            listStyle: `none`,
-            padding: 0,
-          }}
-        >
-          <li>
-            {previous && (
-              <Link to={previous.fields.slug} rel="prev">
-                ← {previous.document.title}
-              </Link>
-            )}
-          </li>
-          <li>
-            {next && (
-              <Link to={next.fields.slug} rel="next">
-                {next.document.title} →
-              </Link>
-            )}
-          </li>
-        </ul>
+        })}
         </Main>
+        <NavBottom next={next} previous={previous} />
       </Layout>
     )
   }
@@ -130,4 +94,4 @@ export const pageQuery = graphql`
       }
     }
   }
-  `
+  `;

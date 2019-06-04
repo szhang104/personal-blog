@@ -1,42 +1,46 @@
-import { Link } from "gatsby"
-import PropTypes from "prop-types"
-import React from "react"
 
-const Header = ({ siteTitle }) => (
-  <header
-    style={{
-      background: `rebeccapurple`,
-      marginBottom: `1.45rem`,
-    }}
-  >
-    <div
-      style={{
-        margin: `0 auto`,
-        maxWidth: 960,
-        padding: `1.45rem 1.0875rem`,
-      }}
-    >
-      <h1 style={{ margin: 0 }}>
-        <Link
-          to="/"
-          style={{
-            color: `white`,
-            textDecoration: `none`,
-          }}
-        >
-          {siteTitle}
-        </Link>
-      </h1>
-    </div>
-  </header>
-)
+import React from "react";
+import styled from 'styled-components';
+import { Link } from "gatsby";
 
-Header.propTypes = {
-  siteTitle: PropTypes.string,
+
+const Contained = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  font-variant: small-caps;
+  border-bottom: 1px solid rgb(76, 86, 106);
+  padding-left: 0.6em;
+  padding-right: 0.6em;
+  padding-bottom: 0.2em;
+  font-size: 20px;
+`;
+
+class Header extends React.Component {
+  constructor(props) {
+    super(props);
+    let {title, description} = props.siteMetaData;
+    this.title = title;
+    this.description = description ? description : null;
+  }
+
+  render () {
+    let description, title;
+    if (this.description){
+      description = <div id="description" dangerouslySetInnerHTML={{__html: this.description}} />;
+    }
+    if (this.title){
+      title = <div dangerouslySetInnerHTML={{__html: this.title}} />;
+    }
+    return (
+        <Contained id='Header'>
+          <Link id="main_title" to="/">
+            {title}
+          </Link>
+          {description}
+        </Contained>
+    )
+  }
 }
 
-Header.defaultProps = {
-  siteTitle: ``,
-}
-
-export default Header
+export default Header;

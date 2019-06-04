@@ -1,50 +1,27 @@
 // theme
-import styled, {ThemeProvider, createGlobalStyle} from 'styled-components';
-
-
-const main_font_css = `
-
-
-/* --------------------------------------------------------------------------
-[EXPERIMENTAL] Multi-axis, single variable font.
-
-Slant axis is not yet widely supported (as of February 2019) and thus this
-multi-axis single variable font is opt-in rather than the default.
-
-When using this, you will probably need to set font-variation-settings
-explicitly, e.g.
-
-  * { font-variation-settings: "slnt" 0deg }
-  .italic { font-variation-settings: "slnt" 10deg }
-
-*/
-@font-face {
-  font-family: 'Inter var experimental';
-  font-weight: 100 900;
-  font-style: oblique 0deg 10deg;
-  src: url("font-files/Inter.var.woff2?v=3.7") format("woff2");
-};
-
-`;
+import React from "react";
+import { Link } from "gatsby";
+import styled, {createGlobalStyle} from 'styled-components';
 
 const Title = styled.h1`
   width: 100%;
   text-align: center;
-  margin: 2.8rem 0;
+  margin: 2.1rem 0 1.8rem 0;
 `;
 
-const Main = styled.div`
-  max-width: ${props => props.theme.maxWidth}px;
-  margin: 0 auto;
-  padding: 1em;
+const Main = styled.main`
+  margin: 0 auto 0.3em 0;
+  padding-bottom: 0.5em;
+  border-bottom: 1px solid rgb(76, 86, 106);
 `;
+
 
 const theme = {
   shadow: '0px 0px 10px rgba(0, 0, 0, 0.2)',
   colors: {
     border: '#4C566A'
   },
-  maxWidth: 680,
+  maxWidth: 720,
   fontSize: {
     small: '80%'
   }
@@ -72,7 +49,7 @@ html, body {
 body {
   background: #ffffff;
   color: #3a343a;
-  font-size: 18px;
+  font-size: 16px;
   text-rendering: optimizeLegibility;
 }
 
@@ -113,7 +90,7 @@ h2 {
 
 
 h3 {
-  margin-top: 2rem;
+  margin-top: 1rem;
   font-size: 1.2rem;
 }
 
@@ -214,8 +191,39 @@ figure figcaption {
   background: #ECEFF4;
 }
 
+p {
+  display: block;
+}
+
 `;
 
-const GlobalStyle = createGlobalStyle`${base_global_style+main_font_css}`;
+class NavBottom extends React.Component {
+  constructor (props) {
+    super(props);
+    let {next, previous} = props;
+    this.next = next ? <Link to={next.fields.slug} rel="next">{next.document.title} →</Link> : "No More";
+    this.prev = previous ? <Link to={previous.fields.slug} rel="prev">← {previous.document.title}</Link> : "No More";
+  }
 
-export {Title, Main, GlobalStyle, theme};
+  render() {
+    return (
+        <div
+          style={{
+            display: `flex`,
+            flexWrap: `wrap`,
+            justifyContent: `space-between`,
+            listStyle: `none`,
+            padding: 0,
+          }}
+        >
+          <div>{this.prev}</div>
+          <div>{this.next}</div>
+        </div>
+      )
+  }
+}
+
+
+const GlobalStyle = createGlobalStyle`${base_global_style}`;
+
+export {Title, Main, GlobalStyle, theme, NavBottom};

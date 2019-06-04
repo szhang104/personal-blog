@@ -7,7 +7,7 @@
 
 import React from "react"
 import { StaticQuery, graphql } from "gatsby"
-import Image from "gatsby-image"
+// import Image from "gatsby-image"
 
 import { rhythm } from "../utils/typography"
 
@@ -16,21 +16,16 @@ function Bio() {
     <StaticQuery
       query={bioQuery}
       render={data => {
-        const { author, social } = data.site.siteMetadata
+        const { author, social } = data.site.siteMetadata;
         return (
           <div
             style={{
               display: `flex`,
               marginBottom: rhythm(2.5),
-            }}
+            }} id="Bio"
           >
             <p>
-              Written by <strong>{author}</strong> who lives and works in San
-              Francisco building useful things.
-              {` `}
-              <a href={`https://twitter.com/${social.twitter}`}>
-                You should follow him on Twitter
-              </a>
+              Written by <strong>{author}</strong>, who is a graduate student with Illinois Institute of Technology.
             </p>
           </div>
         )
@@ -50,6 +45,6 @@ const bioQuery = graphql`
       }
     }
   }
-`
+`;
 
 export default Bio

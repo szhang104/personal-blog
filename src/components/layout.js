@@ -8,12 +8,20 @@
 import React from "react"
 import PropTypes from "prop-types"
 import { StaticQuery, graphql } from "gatsby"
-
+import {Helmet} from "react-helmet";
 import Header from "./header"
 import {GlobalStyle, theme} from "./common"
-import {ThemeProvider} from 'styled-components';
+import styled, {ThemeProvider} from 'styled-components';
 
 // import "./layout.css"
+
+const PageContained = styled.div`
+  margin: 0 auto;
+  max-width: ${props => props.theme.maxWidth}px;
+  padding: 0 1.0875rem 1.45rem;
+  padding-top: 0;
+`;
+
 
 const Layout = ({ children }) => (
   <StaticQuery
@@ -22,6 +30,7 @@ const Layout = ({ children }) => (
         site {
           siteMetadata {
             title
+            description
           }
         }
       }
@@ -29,31 +38,27 @@ const Layout = ({ children }) => (
     render={data => (
       <ThemeProvider theme={theme}>
       <>
+        <Helmet>
+          <link rel="stylesheet" type="text/css"  href="https://rsms.me/inter/inter.css" />
+        </Helmet>
         <GlobalStyle />
-        <Header siteTitle={data.site.siteMetadata.title} />
-        <div
-          style={{
-            margin: `0 auto`,
-            maxWidth: 960,
-            padding: `0px 1.0875rem 1.45rem`,
-            paddingTop: 0,
-          }}
-        >
-          <main>{children}</main>
+        <PageContained id="global_layout">
+          <Header siteMetaData={data.site.siteMetadata} />
+          {children}
           <footer>
             © {new Date().getFullYear()}, Built with
             {` `}
             <a href="https://www.gatsbyjs.org">Gatsby</a>
           </footer>
-        </div>
+        </PageContained>
       </>
       </ThemeProvider>
     )}
   />
-)
+);
 
 Layout.propTypes = {
   children: PropTypes.node.isRequired,
-}
+};
 
 export default Layout
