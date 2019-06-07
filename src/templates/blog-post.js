@@ -1,10 +1,7 @@
 import React from "react"
-import { graphql } from "gatsby"
+import {graphql, Link} from "gatsby"
 import Layout from "../components/layout"
 import SEO from "../components/seo"
-
-// aesthetics
-import {Title, Main, NavBottom} from "../components/common";
 
 // math display using katex
 import 'katex/dist/katex.min.css'; // without it can't display
@@ -15,14 +12,15 @@ import TeX from '@matejmazur/react-katex';
 
 // to avoid using the dangerouslysetinnterhtml; use this to tranform a string of html tags to React elements
 import ReactHtmlParser from 'react-html-parser';
+import styled from "styled-components";
 // import { convertNodeToElement } from 'react-html-parser';
 // import generatePropsFromAttributes from 'react-html-parser/utils/generatePropsFromAttributes';
 
-const crypto = require('crypto');
-const str_hash_f = x => {
-  console.log(x);
-  return crypto.createHash("sha256").update(x, "binary").digest("base64");
-};
+// const crypto = require('crypto');
+// const str_hash_f = x => {
+//   console.log(x);
+//   return crypto.createHash("sha256").update(x, "binary").digest("base64");
+// };
 
 
 
@@ -43,38 +41,104 @@ function transform(node, index) {
 
 
 
+
+class NavBottom_ extends React.Component {
+  constructor (props) {
+    super(props);
+    this.state = {
+      next: this.props.context.next,
+      previous: this.props.context.previous,
+    };
+  }
+
+  render() {
+    let next = this.state.next ?
+      <Link to={this.state.next.fields.slug} rel="next">{this.state.next.document.title} →</Link> :
+      "No More";
+    let prev = this.state.previous ?
+      <Link to={this.state.previous.fields.slug} rel="prev">← {this.state.previous.document.title}</Link> :
+      "No More";
+    return (
+      <div id="nav-bottom" className={this.props.className}>
+        <div>{prev}</div>
+        <div>{next}</div>
+      </div>
+    )
+  }
+}
+
+const NavBottom = styled(NavBottom_)`
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+          list-style: none;
+          padding: 0.7em 0 0 0;
+`;
+
+const PostMain = styled.main`
+  margin: 0 auto 0.3em 0;
+  padding-bottom: 0.5em;
+  display: flex;
+  flex-direction: column;
+  
+  #post_meta {
+    text-align: center;
+    margin: 0 0 1em 0;
+  }
+`;
+
+const Article = styled.article`
+  padding: 0 0 2em 0;
+  border-bottom: 1px solid rgb(76, 86, 106);
+`;
+
+const PostTitle = styled.h1`
+  width: 100%;
+  text-align: center;
+  margin: 1.7rem 0 1.5rem 0;
+`;
+
 // <div dangerouslySetInnerHTML={{ __html: post.html }} />
 class BlogPostTemplate extends React.Component {
+  constructor(props) {
+    super(props);
+    this.post = this.props.data.asciidoc;
+    this.state = {
+      title: this.post.document.title,
+      authors: this.post.document.authors,
+      date: this.post.document.date,
+      post_description: "nothing yet",
+      html: this.post.html,
+      post_context: this.props.pageContext,
+    }
+  }
+
   render() {
-    const siteTitle = this.props.data.site.siteMetadata.title;
-    const { previous, next } = this.props.pageContext;
-    const post = this.props.data.asciidoc;
-    const post_title = post.document.title;
-    const post_date = post.document.date;
-    const post_description = "nothing yet";
-    const post_authors = post.document.authors;
-    const rendered = post.html;
-    
     return (
-      <Layout location={this.props.location} title={siteTitle}>
+      <Layout>
         <SEO
-          title={post_title}
-          description={post_description}
+          title={this.state.title}
+          description={this.state.post_description}
         />
-        <Title id='article_title'>{post_title}</Title>
-        <p id="meta_info">{post_date + " by " + post_authors[0]}</p>
-        <Main>{ReactHtmlParser(rendered, {
-          transform: transform,
-        })}
-        </Main>
-        <NavBottom next={next} previous={previous} />
+        <PostMain id="post_main" className={this.props.className}>
+          <PostTitle id='post_title'>{this.state.title}</PostTitle>
+          <p id="post_meta">{this.state.date + " by " + this.state.authors[0]}</p>
+          <Article>
+          {ReactHtmlParser(
+            this.state.html,
+            {transform: transform,})}
+          </Article>
+          <NavBottom context={this.state.post_context}/>
+        </PostMain>
       </Layout>
     )
   }
 
 }
 
-export default BlogPostTemplate
+
+
+export default BlogPostTemplate;
 
 export const pageQuery = graphql`
   query BlogPostBySlug($slug: String!) {

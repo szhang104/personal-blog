@@ -1,27 +1,12 @@
-// theme
-import React from "react";
-import { Link } from "gatsby";
-import styled, {createGlobalStyle} from 'styled-components';
-
-const Title = styled.h1`
-  width: 100%;
-  text-align: center;
-  margin: 2.1rem 0 1.8rem 0;
-`;
-
-const Main = styled.main`
-  margin: 0 auto 0.3em 0;
-  padding-bottom: 0.5em;
-  border-bottom: 1px solid rgb(76, 86, 106);
-`;
-
+// import React from "react";
+import {createGlobalStyle} from 'styled-components';
 
 const theme = {
   shadow: '0px 0px 10px rgba(0, 0, 0, 0.2)',
   colors: {
     border: '#4C566A'
   },
-  maxWidth: 720,
+  maxWidth: 800,
   fontSize: {
     small: '80%'
   }
@@ -197,33 +182,6 @@ p {
 
 `;
 
-class NavBottom extends React.Component {
-  constructor (props) {
-    super(props);
-    let {next, previous} = props;
-    this.next = next ? <Link to={next.fields.slug} rel="next">{next.document.title} →</Link> : "No More";
-    this.prev = previous ? <Link to={previous.fields.slug} rel="prev">← {previous.document.title}</Link> : "No More";
-  }
-
-  render() {
-    return (
-        <div
-          style={{
-            display: `flex`,
-            flexWrap: `wrap`,
-            justifyContent: `space-between`,
-            listStyle: `none`,
-            padding: 0,
-          }}
-        >
-          <div>{this.prev}</div>
-          <div>{this.next}</div>
-        </div>
-      )
-  }
-}
-
-
 const GlobalStyle = createGlobalStyle`${base_global_style}`;
 
-export {Title, Main, GlobalStyle, theme, NavBottom};
+export {GlobalStyle, theme};

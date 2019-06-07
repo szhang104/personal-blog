@@ -1,9 +1,9 @@
 {
-  "name": "gatsby-starter-default",
+  "name": "biased_representations",
   "private": true,
-  "description": "A simple starter to get up and developing quickly with Gatsby",
-  "version": "0.1.0",
-  "author": "Kyle Mathews <mathews.kyle@gmail.com>",
+  "description": "Ramblings of a grad student",
+  "version": "0.0.1",
+  "author": "Shuai Zhang <szhang104@hawk.iit.edu>",
   "dependencies": {
     "@matejmazur/react-katex": "^3.0.2",
     "asciidoctor": "^2.0.3",
