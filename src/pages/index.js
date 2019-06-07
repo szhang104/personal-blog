@@ -1,7 +1,6 @@
 import React from "react";
 import { Link, graphql } from "gatsby";
-
-import Bio from "../components/bio";
+import styled from 'styled-components';
 import Layout from "../components/layout";
 import SEO from "../components/seo";
 
@@ -13,7 +12,7 @@ class AllPosts extends React.Component {
     this.posts = this.posts.concat(props.data.allAsciidoc.edges);
   }
 
-  process_post( {node} ) {
+  static process_post( {node} ) {
     const title = node.document.title || node.fields.slug;
     const slug = node.fields.slug;
     const date = node.document.date;
@@ -26,7 +25,7 @@ class AllPosts extends React.Component {
 
   render () {
     return <div id="all_posts" style={{width: `1000px`}}>
-      {this.posts.map(this.process_post)}
+      {this.posts.map(AllPosts.process_post)}
     </div>;
   }
 }
@@ -38,16 +37,14 @@ class AllPosts extends React.Component {
 
 
 
-class BlogIndex extends React.Component {
+class BlogIndex_ extends React.Component {
   render() {
     const { data } = this.props;
     const siteTitle = data.site.siteMetadata.title;
-
     return (
-      <Layout location={this.props.location} title={siteTitle}>
-        <SEO title="All posts" />
-        <div id="index_page_layout" style={{display: `flex`, justifyContent: `space-evenly`, marginBottom: `3em`}}>
-          <Bio />
+      <Layout>
+        <SEO title={siteTitle} />
+        <div id="index_page_layout" style={{}}>
           <AllPosts data={data}/>
         </div>
       </Layout>
@@ -55,9 +52,12 @@ class BlogIndex extends React.Component {
   }
 }
 
+const BlogIndex = styled(BlogIndex_)`
+  display: flex;
+  justify-content: space-evenly;
+`;
 
-
-export default BlogIndex
+export default BlogIndex;
 
 export const pageQuery = graphql`
   query {
