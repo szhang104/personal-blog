@@ -1,5 +1,5 @@
-Asciidoctor Demo
-================
+= Asciidoctor Demo
+
 ////
 Big ol' comment
 
@@ -121,6 +121,7 @@ with this literal text
 ....
 +
 ** second level
+** another second level
 *** third level
 - fourth level
 * back to +

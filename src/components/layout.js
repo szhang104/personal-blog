@@ -12,10 +12,40 @@ import {Helmet} from "react-helmet";
 import Header from "./header"
 import {GlobalStyle, theme} from "./common"
 import styled, {ThemeProvider} from 'styled-components';
+import scriptLoader from 'react-async-script-loader'
 
 // import "./layout.css"
 
-const PageContained = styled.div`
+class PageContained_ extends React.Component {
+  constructor(props) {
+    super(props);
+    this.node = React.createRef();
+  }
+
+
+  renderMath() {
+    window.MathJax.Hub.Queue([
+      "Typeset",
+      window.MathJax.Hub,
+      this.node.current,
+    ]);
+  }
+
+  // componentDidMount() {
+  //   this.renderMath();
+  // }
+
+  componentDidUpdate() {
+    this.renderMath();
+  }
+
+  render() {
+    return <div ref={this.node} id="global_layout" className={this.props.className}>{this.props.children}</div>;
+  }
+}
+
+
+const PageContained = styled(PageContained_)`
   margin: 0 auto;
   max-width: ${props => props.theme.maxWidth}px;
   padding: 0 1.0875rem 1.45rem;
@@ -32,11 +62,7 @@ const PageContained = styled.div`
 `;
 
 
-class Sidebar extends React.Component {
-  constructor(props) {
-    super(props)
-  }
-
+class Sidebar_ extends React.Component {
   render() {
     return (
       <div id="sidebar" className={this.props.className}>
@@ -48,7 +74,7 @@ class Sidebar extends React.Component {
         </div>
         <div id="sidebar-links">
           <div>Useful Links</div>
-          <a href="www.google.com">Example Link</a>
+          <a href={"www.google.com"}>Example Link</a>
         </div>
         <div id="sidebar-message">
           <p>Support the Free Software Movement!</p>
@@ -58,7 +84,7 @@ class Sidebar extends React.Component {
   }
 }
 
-const Sidebar_s = styled(Sidebar)`
+const Sidebar = styled(Sidebar_)`
   flex: 0 0 7em;
   margin: 0 4ch 0 1ch;
   display: flex;
@@ -105,12 +131,21 @@ const Layout = ({ children }) => (
       <>
         <Helmet>
           <link rel="stylesheet" type="text/css"  href="https://rsms.me/inter/inter.css" />
+          <script type="text/x-mathjax-config">
+            {`MathJax.Hub.Config({extensions: ["jsMath2jax.js"],});`}
+          </script>
+          <script type="text/javascript">
+            {`function renderMath() { MathJax.Hub.Rerender(); }`}
+          </script>
+          <script type="text/javascript" async onload="renderMath()"
+                  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+          </script>
         </Helmet>
         <GlobalStyle />
-        <PageContained id="global_layout">
+        <PageContained>
           <Header siteMetaData={data.site.siteMetadata} />
           <div id="main_columns">
-            <Sidebar_s />
+            <Sidebar/>
             {children}
           </div>
           <Footer>
@@ -129,4 +164,8 @@ Layout.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-export default Layout
+export default scriptLoader(
+  [
+    'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML',
+  ],
+)(Layout);

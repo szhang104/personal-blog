@@ -16,17 +16,23 @@ class AllPosts extends React.Component {
     const title = node.document.title || node.fields.slug;
     const slug = node.fields.slug;
     const date = node.document.date;
-    return <div id={slug}>
-      <h3><Link to={slug}>{title}</Link></h3>
-      <small>{date}</small>
-      <p><small>{node.document.excerpt}</small></p>
-    </div>
+    return (
+      <div id={slug} key={node.document.title}>
+        <h3><Link to={slug}>{title}</Link></h3>
+        <small>{date}</small>
+        <p>
+          <small>{node.document.excerpt}</small>
+        </p>
+      </div>
+    );
   }
 
   render () {
-    return <div id="all_posts" style={{width: `1000px`}}>
-      {this.posts.map(AllPosts.process_post)}
-    </div>;
+    return (
+      <div id="all_posts">
+        {this.posts.map(AllPosts.process_post)}
+      </div>
+    );
   }
 }
 

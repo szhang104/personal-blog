@@ -33,7 +33,9 @@ class ReactAsciidocConverter {
         //   displayMode: true,
         // });
         // defer to the react-katex
-        res = `<div class='block-math'>${node.getContent()}</div>`;
+        // using <div>, <span> with class "math" is jsMath notation
+        // need to use MathJax options
+        res = `<div class='math'>${node.getContent()}</div>`;
         break;
 
 
@@ -47,7 +49,7 @@ class ReactAsciidocConverter {
           //   throwOnError: false,
           //   displayMode: false,
           // });
-          res = `<div class='inline-math'>${node.text}</div>`;
+          res = `<span class='math'>${node.text}</span>`;
           break;
         }
 

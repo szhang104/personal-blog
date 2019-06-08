@@ -3,7 +3,8 @@ Jim Allen <jallen@example.org>; Uncle Wang <uwang@example.org>
 1.0, July 29, 2018
 :stem:
 
-some post content here: latexmath:[C = \alpha\psi + \beta Y^{\gamma} + \epsilon]
+some post content here:
+latexmath:[C = \alpha\psi + \beta Y^{\gamma} + \epsilon]
 
 == First Section
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
@@ -15,9 +16,7 @@ proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 [stem]
 ++++
 \def\f#1{f(#1)}
-\f{x} = \int_{-\infty}^\infty
-    \hat \f\xi\,e^{2 \pi i \xi x}
-    \,d\xi
+\f{x} = \int_{-\infty}^\infty  \f\xi\, e^{2 \pi i \xi x dx}\, d\xi
 ++++
 
 _See_ *how* it looks now?
@@ -27,12 +26,12 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
 tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
 
 - quis nostrud
-- exercitation
+- exercitation1
 	-- ullamco laboris
 	-- nisi ut
 
-* liquip ea commodo consequat.
-	** Duis aute irure
+* liquip ear commodo consequat.
+	** Duis autem irure reren
 	** dolor in reprehenderit
 		*** in voluptate velit esse
 		*** cillum dolore eu fugiat nulla pariatur.

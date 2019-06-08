@@ -1,7 +1,7 @@
 module.exports = {
   siteMetadata: {
-    title: `<em>Biased</em> Representations`,
-    description: `Because who live their lives <em>in expection</em>?`,
+    title: `Biased Representations`,
+    description: `Because who live their lives _in expection_?`,
     author: `sz`,
     siteUrl: `http://localhost:8080/`,
     social: {
