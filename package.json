@@ -20,7 +20,6 @@
     "katex": "^0.10.2",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
-    "react-async-script-loader": "^0.3.0",
     "react-dom": "^16.8.6",
     "react-helmet": "^5.2.1",
     "react-html-parser": "^2.0.2",

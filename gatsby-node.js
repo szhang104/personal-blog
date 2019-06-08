@@ -1,7 +1,7 @@
 const path = require(`path`);
 const { createFilePath } = require(`gatsby-source-filesystem`);
 const asciidoctor = require(`asciidoctor`)();
-// const katex = require('katex');
+
 
 class ReactAsciidocConverter {
   constructor () {

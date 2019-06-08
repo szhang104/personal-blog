@@ -5,7 +5,7 @@ import Layout from "../components/layout";
 import SEO from "../components/seo";
 
 
-class AllPosts extends React.Component {
+class AllPosts_ extends React.Component {
   constructor (props) {
     super(props);
     this.posts = [];
@@ -36,12 +36,9 @@ class AllPosts extends React.Component {
   }
 }
 
-
-
-
-
-
-
+const AllPosts = styled(AllPosts_)`
+    padding-left: 1em;
+`;
 
 class BlogIndex_ extends React.Component {
   render() {
@@ -50,7 +47,7 @@ class BlogIndex_ extends React.Component {
     return (
       <Layout>
         <SEO title={siteTitle} />
-        <div id="index_page_layout" style={{}}>
+          <div id="index_page_layout" className={this.props.className + " content"}>
           <AllPosts data={data}/>
         </div>
       </Layout>
@@ -60,7 +57,7 @@ class BlogIndex_ extends React.Component {
 
 const BlogIndex = styled(BlogIndex_)`
   display: flex;
-  justify-content: space-evenly;
+  justify-content: flex-start;
 `;
 
 export default BlogIndex;

@@ -4,12 +4,15 @@ import {createGlobalStyle} from 'styled-components';
 const theme = {
   shadow: '0px 0px 10px rgba(0, 0, 0, 0.2)',
   colors: {
-    border: '#4C566A'
+      border: '#4C566A',
+      link: '#3c3c3c',
   },
-  maxWidth: 800,
+    maxWidth: 1200,
+    sidebarWidth: `8em`,
+    mainWidth: `700px`,
   fontSize: {
     small: '80%'
-  }
+  },
 };
 
 const base_global_style = `
@@ -38,14 +41,37 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* A tufte-css style link */
+
 a {
-  outline: none;
-  text-decoration: none;
   color: inherit;
+  text-decoration: none;
 }
 
-p a, figcaption a {
-  border-bottom: 1px solid ${props => props.theme.colors.border};
+.content a {
+  outline: none;
+  text-decoration: none;
+  color: #3c3c3c;
+  background-image:
+      linear-gradient(#fff, #fff),
+      linear-gradient(#fff, #fff),
+      linear-gradient(#333, #333);
+  background-size:
+      0.05em 1px,
+      0.05em 1px,
+         1px 1px;
+  background-repeat:
+      no-repeat,
+      no-repeat,
+      repeat-x;
+  background-position:
+        0% 90%,
+      100% 90%,
+        0% 90%;
+  text-shadow: 0.03em 0       #fff,         -0.03em 0       #fff,          0      0.03em  #fff,          0     -0.03em  #fff,          0.06em 0       #fff,         -0.06em 0       #fff,          0.09em 0       #fff,         -0.09em 0       #fff,          0.12em 0       #fff,         -0.12em 0       #fff,          0.15em 0       #fff,         -0.15em 0       #fff;
+  /*  Disable oldstyle nums in underlined links because the oldstyle nums are almost subscript-like and overlap */
+  font-variant-numeric: lining-nums;
+
 }
 
 table {
@@ -79,10 +105,6 @@ h3 {
   font-size: 1.2rem;
 }
 
-// p {
-//   margin-top: 0.7rem;
-//   margin-bottom: 1rem;
-// }
 
 blockquote {
   font-style: italic;

@@ -2,6 +2,8 @@ import React from "react";
 import styled from 'styled-components';
 import { Link } from "gatsby";
 
+const asciidoctor = require(`asciidoctor`)();
+
 
 
 
@@ -9,6 +11,8 @@ class Header_ extends React.Component {
   constructor(props) {
     super(props);
     let {title, description} = props.siteMetaData;
+    description = asciidoctor.convert(description, {});
+    title = asciidoctor.convert(title, {});
     this.title = title;
     this.description = description ? description : null;
   }
@@ -42,6 +46,7 @@ const Header = styled(Header_)`
   padding-right: 0.6em;
   padding-bottom: 0.2em;
   font-size: 20px;
+  width: ${props => props.theme.mainWidth}
 `;
 
 export default Header;
