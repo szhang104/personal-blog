@@ -188,7 +188,7 @@ class BlogPostTemplate extends React.Component {
           title={this.state.title}
           description={this.state.post_description}
         />
-        <PostMain id="post_main" className={this.props.className}>
+        <PostMain id="post_main" className={this.props.className + " content"}>
           <PostTitle id='post_title'>{this.state.title}</PostTitle>
           <p id="post_meta">{this.state.date + " by " + this.state.authors[0]}</p>
           <Article>

@@ -105,6 +105,12 @@ h3 {
   font-size: 1.2rem;
 }
 
+/* this is the title for blocks */
+div .title {
+  font-size: 95%;
+  color: #888888;
+  font-weight: 500;
+}
 
 blockquote {
   font-style: italic;
@@ -113,13 +119,145 @@ blockquote {
   margin-left: -1.4rem;
 }
 
-li {
-  margin-bottom: 0.7rem;
-  padding-left: 1.4rem;
+/**************/
+/* PARAGRAPHS */
+/**************/
+
+p {
+    margin: 0;
+}
+.paragraph {
+    margin-bottom: 0.2em;
 }
 
-ul, ol {
-  padding-left: 1.4rem;
+.paragraph + .paragraph {
+    text-indent: 2.5em;
+}
+@media only screen and (max-width: 64.9ch) {
+    .paragraph + .paragraph {
+        text-indent: 1em;
+    }
+}
+
+/*********/
+/* LISTS */
+/*********/
+ul,
+ol {
+    list-style-type: none;
+    margin: 0.1em 0 0em 0;
+    padding: 0 0 0 2em;
+    overflow: hidden;
+}
+
+/* the div after a list should add space */
+div .ulist + div {
+  margin-top: 1em;
+}
+
+div .olist + div {
+  margin-top: 1em;
+}
+
+li > ul,
+li > ol {
+    margin: 0.5em 0;
+}
+
+ul > li,
+ol > li {
+    position: relative;
+    margin: 0;
+}
+ul > li:nth-of-type(n+2),
+ol > li:nth-of-type(n+2) {
+    margin: 0.35em 0 0 0;
+}
+
+ul > li::before,
+ol > li::before {
+    position: absolute;
+    z-index: 1;
+}
+
+@media only screen and (max-width: 64.9ch) {
+    ul,
+    ol {
+        padding: 0 0 0 1.75em;
+    }
+}
+/*=-----------------------=*/
+/*= Bulleted list markers =*/
+/*=-----------------------=*/
+ul > li::before {
+    color: #888;
+    font-size: 0.875em;
+    top: 0.125em;
+    left: -1.375em;
+}
+
+ul > li::before,
+ul ul ul > li::before {
+    content: "\\2727";
+}
+ul ul > li::before,
+ul ul ul ul > li::before {
+    content: "\\2726";
+}
+
+/*=-----------------------=*/
+/*= Numbered list markers =*/
+/*=-----------------------=*/
+
+ol {
+    counter-reset: ol;
+}
+ol > li {
+    counter-increment: ol;
+}
+ol > li::before {
+    content: counter(ol) ".";
+    width: 2em;
+    right: calc(100% + 0.5em);
+    text-align: right;
+    font-feature-settings: 'onum';
+    color: #444;
+}
+
+ol ol {
+    list-style-type: lower-roman;
+}
+ol ol > li {
+    padding: 0 0 0 0.25em;
+}
+ol ol > li::before {
+    content: none;
+}
+
+ol ol ol {
+    list-style-type: lower-alpha;
+}
+
+/*=------------------=*/
+/*= Weird edge cases =*/
+/*=------------------=*/
+
+li > ul + p,
+li > ol + p {
+    margin-top: 1em;
+}
+
+
+/*=-----------------------=*/
+/*= other blocks---------=*/
+/*=-----------------------=*/
+
+div .dlist {
+  margin-bottom: 0.15em;
+}
+
+dd {
+  text-indent: 3em;
 }
 
 hr {
