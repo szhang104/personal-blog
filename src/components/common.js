@@ -4,18 +4,22 @@ import {createGlobalStyle} from 'styled-components';
 const theme = {
   shadow: '0px 0px 10px rgba(0, 0, 0, 0.2)',
   colors: {
-      border: '#4C566A',
-      link: '#3c3c3c',
+    border: '#4C566A',
+    link: '#3c3c3c',
   },
-    maxWidth: 1200,
-    sidebarWidth: `8em`,
-    mainWidth: `700px`,
+  maxWidth: 1200,
+  sidebarWidth: `8em`,
+  mainWidth: `700px`,
   fontSize: {
-    small: '80%'
+    small: '80%',
+    normal: '100%',
   },
+  baseFontSize: `15px`,
+  baseLinSpace: 1.4,
+  baseFont: `Inter`,
 };
 
-const base_global_style = `
+const GlobalStyle = createGlobalStyle`
 ::selection {
   background: #c9ecff;
 }
@@ -29,16 +33,15 @@ const base_global_style = `
 }
 
 html, body {
-  font-family: 'Inter', sans-serif;
+  font-family: ${props => props.theme.baseFont}, sans-serif;
   text-rendering: optimizeLegibility;
   line-height: 1.4;
+  font-size: ${props => props.theme.baseFontSize};
 }
 
 body {
   background: #ffffff;
   color: #3a343a;
-  font-size: 16px;
-  text-rendering: optimizeLegibility;
 }
 
 /* A tufte-css style link */
@@ -65,9 +68,9 @@ a {
       no-repeat,
       repeat-x;
   background-position:
-        0% 90%,
+        0 90%,
       100% 90%,
-        0% 90%;
+        0 90%;
   text-shadow: 0.03em 0       #fff,         -0.03em 0       #fff,          0      0.03em  #fff,          0     -0.03em  #fff,          0.06em 0       #fff,         -0.06em 0       #fff,          0.09em 0       #fff,         -0.09em 0       #fff,          0.12em 0       #fff,         -0.12em 0       #fff,          0.15em 0       #fff,         -0.15em 0       #fff;
   /*  Disable oldstyle nums in underlined links because the oldstyle nums are almost subscript-like and overlap */
   font-variant-numeric: lining-nums;
@@ -82,20 +85,20 @@ table {
   border-bottom: none;
 }
 
-
 h1 {
-  font-size: 230%;
+  font-size: 2.3rem;
   line-height: 1.2;
-  margin-bottom: 0.2em;
+  margin-top: 1.3rem;
+  margin-bottom: 0.5rem;
 }
 
 h2, h3, h4, h5, h6 {
   line-height: 1.2;
-  margin-bottom: 0rem;
+  margin-bottom: 0.3rem;
 }
 
 h2 {
-  margin-top: 1.2em;
+  margin-top: 1rem;
   font-size: 1.4rem;
 }
 
@@ -145,7 +148,7 @@ p {
 ul,
 ol {
     list-style-type: none;
-    margin: 0.1em 0 0em 0;
+    margin: 0;
     padding: 0 0 0 2em;
     overflow: hidden;
 }
@@ -161,7 +164,7 @@ div .olist + div {
 
 li > ul,
 li > ol {
-    margin: 0.5em 0;
+    margin: 0.5rem 0;
 }
 
 ul > li,
@@ -171,7 +174,7 @@ ol > li {
 }
 ul > li:nth-of-type(n+2),
 ol > li:nth-of-type(n+2) {
-    margin: 0.35em 0 0 0;
+    margin: 0.3rem 0 0 0;
 }
 
 ul > li::before,
@@ -339,9 +342,6 @@ figure figcaption {
 p {
   display: block;
 }
-
 `;
-
-const GlobalStyle = createGlobalStyle`${base_global_style}`;
 
 export {GlobalStyle, theme};

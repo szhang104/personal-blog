@@ -5,8 +5,6 @@ import { Link } from "gatsby";
 const asciidoctor = require(`asciidoctor`)();
 
 
-
-
 class Header_ extends React.Component {
   constructor(props) {
     super(props);
@@ -45,8 +43,8 @@ const Header = styled(Header_)`
   padding-left: 0.6em;
   padding-right: 0.6em;
   padding-bottom: 0.2em;
-  font-size: 20px;
-  width: ${props => props.theme.mainWidth}
+  font-size: 1.3rem;
+  width: ${props => props.theme.mainWidth};
 `;
 
 export default Header;

@@ -4,11 +4,11 @@ import Layout from "../components/layout"
 import SEO from "../components/seo"
 
 // math display using katex
-import 'katex/dist/katex.min.css'; // without it can't display
-import 'katex/contrib/copy-tex/copy-tex.css'; // click to select whole equation
+// import 'katex/dist/katex.min.css'; // without it can't display
+// import 'katex/contrib/copy-tex/copy-tex.css'; // click to select whole equation
 // import katexReplaceWithTex from 'katex/contrib/copy-tex/katex2tex.js';
-import 'katex/contrib/copy-tex/copy-tex.js';
-import TeX from '@matejmazur/react-katex';
+// import 'katex/contrib/copy-tex/copy-tex.js';
+// import TeX from '@matejmazur/react-katex';
 
 // to avoid using the dangerouslysetinnterhtml; use this to tranform a string of html tags to React elements
 import ReactHtmlParser from 'react-html-parser';
@@ -90,9 +90,9 @@ const transform = (node, index) => {
   // if (node.type === 'tag' && node.name === 'span' && node.attribs !== undefined && node.attribs.class === 'inline-math') {
   //   return React.createElement(TeX, {}, node.children[0].data);
   // }
-  if (node.type === 'tag' && node.name === 'div' && node.attribs !== undefined && node.attribs.class === 'block-math') {
-    return React.createElement(TeX, {block: true }, node.children[0].data);
-  }
+  // if (node.type === 'tag' && node.name === 'div' && node.attribs !== undefined && node.attribs.class === 'block-math') {
+  //   return React.createElement(TeX, {block: true }, node.children[0].data);
+  // }
   if (node.type === 'tag' && node.name === 'li') {
     node.attribs["react_key"] = generate_li_key(node, index);
     return convertNodeToElement(node, index, transform);
@@ -108,10 +108,8 @@ const transform = (node, index) => {
 };
 
 
-
-
 class NavBottom_ extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.state = {
       next: this.props.context.next,
@@ -161,9 +159,7 @@ const Article = styled.article`
 `;
 
 const PostTitle = styled.h1`
-  width: 100%;
   text-align: center;
-  margin: 1.7rem 0 1.5rem 0;
 `;
 
 // <div dangerouslySetInnerHTML={{ __html: post.html }} />
@@ -192,9 +188,9 @@ class BlogPostTemplate extends React.Component {
           <PostTitle id='post_title'>{this.state.title}</PostTitle>
           <p id="post_meta">{this.state.date + " by " + this.state.authors[0]}</p>
           <Article>
-          {ReactHtmlParser(
-            this.state.html,
-            {transform: transform,})}
+            {ReactHtmlParser(
+              this.state.html,
+              {transform: transform,})}
           </Article>
           <NavBottom context={this.state.post_context}/>
         </PostMain>
@@ -203,7 +199,6 @@ class BlogPostTemplate extends React.Component {
   }
 
 }
-
 
 
 export default BlogPostTemplate;

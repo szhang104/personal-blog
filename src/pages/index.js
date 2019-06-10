@@ -47,7 +47,7 @@ class BlogIndex_ extends React.Component {
     return (
       <Layout>
         <SEO title={siteTitle} />
-          <div id="index_page_layout" className={this.props.className + " content"}>
+        <div id="index_page_layout" className={this.props.className + " content"}>
           <AllPosts data={data}/>
         </div>
       </Layout>

@@ -17,7 +17,6 @@
     "gatsby-source-filesystem": "^2.0.38",
     "gatsby-transformer-asciidoc": "^1.0.5",
     "gatsby-transformer-sharp": "^2.1.21",
-    "katex": "^0.10.2",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",

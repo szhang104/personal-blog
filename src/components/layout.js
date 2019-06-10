@@ -13,11 +13,6 @@ import Header from "./header"
 import {GlobalStyle, theme} from "./common"
 import styled, {ThemeProvider} from 'styled-components';
 
-// import scriptLoader from 'react-async-script-loader'
-
-// import "./layout.css"
-
-
 const renderMath_MathJax = () => {
   window.MathJax.Hub.Queue([
     "Typeset",
@@ -26,13 +21,33 @@ const renderMath_MathJax = () => {
   ]);
 };
 
+const add_prettyprint_class = () => {
+  window.jQuery("code").addClass("prettyprint");
+};
+
+const highlightjs_render = () => {
+  window.document.querySelectorAll("pre code").forEach((block) => {
+    window.hljs.highlightBlock(block);
+  });
+};
 
 const external_scripts = [
+  {
+    name: 'jquery',
+    url: 'https://code.jquery.com/jquery-3.4.1.min.js',
+    onload: add_prettyprint_class,
+  },
   {
     name: 'mathjax',
     url: "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML",
     onload: renderMath_MathJax,
     onupdate: renderMath_MathJax,
+  },
+  {
+    name: 'highlight-js',
+    url: 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/highlight.min.js',
+    onload: highlightjs_render,
+    onupdate: highlightjs_render,
   },
 ];
 
@@ -42,8 +57,8 @@ class PageContained_ extends React.Component {
     this.myRef = React.createRef();
     this.external_scripts = props.external_scripts;
     this.external_scripts.forEach(s => {
-      s.onload = s.onload.bind(this);
-      s.onupdate = s.onupdate.bind(this);
+      s.onload && (s.onload = s.onload.bind(this));
+      s.onupdate && (s.onupdate = s.onupdate.bind(this));
     });
   }
 
@@ -62,7 +77,7 @@ class PageContained_ extends React.Component {
   }
 
   componentDidUpdate() {
-    this.external_scripts.forEach(s => s.onupdate());
+    this.external_scripts.forEach(s => s.onupdate && s.onupdate());
   }
 
   render() {
@@ -159,27 +174,29 @@ const Layout = ({ children }) => (
     `}
     render={data => (
       <ThemeProvider theme={theme}>
-      <>
-        <Helmet>
-          <link rel="stylesheet" type="text/css"  href="https://rsms.me/inter/inter.css" />
-          <script type="text/x-mathjax-config">
-            {`MathJax.Hub.Config({extensions: ["jsMath2jax.js"],});`}
-          </script>
-        </Helmet>
-        <GlobalStyle />
-        <PageContained external_scripts={external_scripts}>
-          <Sidebar/>
-          <div id={`content-container`}>
-            <Header siteMetaData={data.site.siteMetadata}/>
-            {children}
-            <Footer>
-              © {new Date().getFullYear()}, Built with
-              {` `}
-              <a href="https://www.gatsbyjs.org">Gatsby</a>
-            </Footer>
-          </div>
-        </PageContained>
-      </>
+        <>
+          <Helmet>
+            <link rel="stylesheet" type="text/css" href="https://rsms.me/inter/inter.css"/>
+            <link rel="stylesheet"
+                  href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/styles/default.min.css"/>
+            <script type="text/x-mathjax-config">
+              {`MathJax.Hub.Config({extensions: ["jsMath2jax.js"],});`}
+            </script>
+          </Helmet>
+          <GlobalStyle/>
+          <PageContained external_scripts={external_scripts}>
+            <Sidebar/>
+            <div id={`content-container`}>
+              <Header siteMetaData={data.site.siteMetadata}/>
+              {children}
+              <Footer>
+                © {new Date().getFullYear()}, Built with
+                {` `}
+                <a href="https://www.gatsbyjs.org">Gatsby</a>
+              </Footer>
+            </div>
+          </PageContained>
+        </>
       </ThemeProvider>
     )}
   />
