@@ -71,7 +71,7 @@ exports.createPages = ({ graphql, actions }) => {
     `
       {
         allAsciidoc(
-          sort: { fields: document___date, order: DESC }
+          sort: { fields: document___datetime, order: DESC }
           limit: 1000
         ) {
           edges {
@@ -151,16 +151,23 @@ async function createAsciidocNode({
 
   try {
     const html = doc.convert(); // Use "partition" option to be able to get title, subtitle, combined
-
+    // attributes are not completely parsed until after convert
+    let docAttributes = doc.getAttributes();
+    if (!docAttributes.hasOwnProperty('publish')) {
+      return;
+    }
+    let pageAttributes = extractPageAttributes(docAttributes);
     const title = doc.getDocumentTitle({
       partition: true
     });
 
     let revision = doc.getRevisionInfo();
-
     let authors = doc.getAuthors();
-
-    let pageAttributes = extractPageAttributes(doc.getAttributes());
+    let tags = docAttributes.tags;
+    if (tags) {
+      tags = tags.split(',');
+      tags = tags.map((t) => t.trim());
+    }
 
     const asciiNode = {
       id: createNodeId(`${node.id} >>> ASCIIDOC`),
@@ -175,12 +182,15 @@ async function createAsciidocNode({
       document: {
         title: title.getCombined(),
         authors: authors ? authors.map(x => x.getName()) : [],
-        date: revision.getDate(),
+        date: docAttributes.docdate,
+        datetime: docAttributes.docdatetime,
         excerpt: "I said this",
+        tags: tags,
       },
       title,
       revision,
       authors,
+      docAttributes,
       pageAttributes
     };
     asciiNode.internal.contentDigest = createContentDigest(asciiNode);
@@ -192,8 +202,7 @@ async function createAsciidocNode({
   } catch (err) {
     reporter.panicOnBuild(`Error processing Asciidoc ${node.absolutePath ? `file ${node.absolutePath}` : `in node ${node.id}`}:\n
     ${err.message}`);
-  }  
-
+  }
 }
 
 const extractPageAttributes = allAttributes => Object.entries(allAttributes).reduce((pageAttributes, [key, value]) => {

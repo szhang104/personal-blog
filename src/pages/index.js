@@ -69,7 +69,7 @@ export const pageQuery = graphql`
         title
       }
     }
-    allAsciidoc(sort: { fields: document___date, order: DESC }) {
+    allAsciidoc(sort: { fields: document___datetime, order: DESC }) {
       edges {
         node {
           fields {
