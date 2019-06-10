@@ -109,10 +109,18 @@ h3 {
 }
 
 /* this is the title for blocks */
-div .title {
+div.title {
   font-size: 95%;
   color: #888888;
   font-weight: 500;
+}
+
+div.paragraph div.title {
+  font-size: 100%;
+  color: black;
+  font-weight: 500;
+  display: inline;
+
 }
 
 blockquote {
@@ -134,7 +142,7 @@ p {
 }
 
 .paragraph + .paragraph {
-    text-indent: 2.5em;
+    text-indent: 2em;
 }
 @media only screen and (max-width: 64.9ch) {
     .paragraph + .paragraph {

@@ -178,6 +178,17 @@ class BlogPostTemplate extends React.Component {
   }
 
   render() {
+    let authors = this.state.authors.map((a, i, arr) => {
+      if (i === 0) {
+        return " by " + a;
+      } else if (i === arr.length - 1) {
+        return " and " + a;
+      } else {
+        return " " + a;
+      }
+    });
+    let date = new Date(this.state.date).toLocaleDateString('en-US');
+    authors = authors.concat();
     return (
       <Layout>
         <SEO
@@ -186,7 +197,10 @@ class BlogPostTemplate extends React.Component {
         />
         <PostMain id="post_main" className={this.props.className + " content"}>
           <PostTitle id='post_title'>{this.state.title}</PostTitle>
-          <p id="post_meta">{this.state.date + " by " + this.state.authors[0]}</p>
+          <div id="post_meta">
+            <div>last updated: {date}</div>
+            <div>{authors}</div>
+          </div>
           <Article>
             {ReactHtmlParser(
               this.state.html,
