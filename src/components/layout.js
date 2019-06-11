@@ -177,6 +177,7 @@ const Layout = ({ children }) => (
         <>
           <Helmet>
             <link rel="stylesheet" type="text/css" href="https://rsms.me/inter/inter.css"/>
+            <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Serif&display=swap" rel="stylesheet"/>
             <link rel="stylesheet"
                   href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/styles/default.min.css"/>
             <script type="text/x-mathjax-config">

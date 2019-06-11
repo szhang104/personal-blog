@@ -16,7 +16,7 @@ const theme = {
   },
   baseFontSize: `15px`,
   baseLinSpace: 1.4,
-  baseFont: `Inter`,
+  baseFont: `IBM Plex Serif`,
 };
 
 const GlobalStyle = createGlobalStyle`
