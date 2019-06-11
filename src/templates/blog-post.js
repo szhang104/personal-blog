@@ -109,21 +109,14 @@ const transform = (node, index) => {
 
 
 class NavBottom_ extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      next: this.props.context.next,
-      previous: this.props.context.previous,
-    };
-  }
-
   render() {
-    let next = this.state.next ?
-      <Link to={this.state.next.fields.slug} rel="next">{this.state.next.document.title} →</Link> :
-      "No More";
-    let prev = this.state.previous ?
-      <Link to={this.state.previous.fields.slug} rel="prev">← {this.state.previous.document.title}</Link> :
-      "No More";
+    let next = this.props.context.next, previous = this.props.context.previous;
+    next = next ?
+      <Link to={next.fields.slug} rel="next">{next.document.title} →</Link> :
+      "No More Newer";
+    let prev = previous ?
+      <Link to={previous.fields.slug} rel="prev">← {previous.document.title}</Link> :
+      "No More Older";
     return (
       <div id="nav-bottom" className={this.props.className}>
         <div>{prev}</div>
@@ -146,6 +139,7 @@ const PostMain = styled.main`
   padding-bottom: 0.5em;
   display: flex;
   flex-direction: column;
+  width: 100%;
   
   #post_meta {
     text-align: center;
@@ -153,7 +147,21 @@ const PostMain = styled.main`
   }
 `;
 
-const Article = styled.article`
+class Article_ extends React.Component {
+  render() {
+    return (
+      <article id="markdownOutput" className={this.props.className}>
+        {ReactHtmlParser(
+          this.props.inner,
+          {transform: transform,}
+        )}
+      </article>
+    );
+  }
+}
+
+
+const Article = styled(Article_)`
   padding: 0 0 2em 0;
   border-bottom: 1px solid rgb(76, 86, 106);
 `;
@@ -164,21 +172,9 @@ const PostTitle = styled.h1`
 
 // <div dangerouslySetInnerHTML={{ __html: post.html }} />
 class BlogPostTemplate extends React.Component {
-  constructor(props) {
-    super(props);
-    this.post = this.props.data.asciidoc;
-    this.state = {
-      title: this.post.document.title,
-      authors: this.post.document.authors,
-      date: this.post.document.date,
-      post_description: "nothing yet",
-      html: this.post.html,
-      post_context: this.props.pageContext,
-    }
-  }
-
   render() {
-    let authors = this.state.authors.map((a, i, arr) => {
+    let post = this.props.data.asciidoc;
+    let authors = post.document.authors.map((a, i, arr) => {
       if (i === 0) {
         return " by " + a;
       } else if (i === arr.length - 1) {
@@ -187,26 +183,23 @@ class BlogPostTemplate extends React.Component {
         return " " + a;
       }
     });
-    let date = new Date(this.state.date).toLocaleDateString('en-US');
     authors = authors.concat();
+    let date = new Date(post.document.date).toLocaleDateString('en-US');
+
     return (
       <Layout>
         <SEO
-          title={this.state.title}
-          description={this.state.post_description}
+          title={post.document.title}
+          description={"nothing yet"}
         />
         <PostMain id="post_main" className={this.props.className + " content"}>
-          <PostTitle id='post_title'>{this.state.title}</PostTitle>
+          <PostTitle id='post_title'>{post.document.title}</PostTitle>
           <div id="post_meta">
             <div>last updated: {date}</div>
             <div>{authors}</div>
           </div>
-          <Article>
-            {ReactHtmlParser(
-              this.state.html,
-              {transform: transform,})}
-          </Article>
-          <NavBottom context={this.state.post_context}/>
+          <Article inner={post.html}/>
+          <NavBottom context={this.props.pageContext}/>
         </PostMain>
       </Layout>
     )
