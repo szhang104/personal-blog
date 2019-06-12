@@ -1,38 +1,47 @@
 import React from "react";
+
 import { Link, graphql } from "gatsby";
 import styled from 'styled-components';
 import Layout from "../components/layout";
 import SEO from "../components/seo";
 
+const TagBox = props => {
+  let {tag, posts} = props;
+  return (
+      <div className={props.className + ' tag_container'} id={'tag_' + tag}>
+        <h2>{tag}</h2>
+        <ul>
+          {posts.map(p => {
+            return (
+                <li key={p.node.fields.slug}>
+                  <Link to={p.node.fields.slug}>{p.node.document.title}</Link>
+                </li>);
+          })}
+        </ul>
+      </div>
+  );
+};
 
 class AllPosts_ extends React.Component {
-  constructor (props) {
-    super(props);
-    this.posts = [];
-    this.posts = this.posts.concat(props.data.allAsciidoc.edges);
-  }
-
-  static process_post( {node} ) {
-    const title = node.document.title || node.fields.slug;
-    const slug = node.fields.slug;
-    const date = node.document.date;
-    return (
-      <div id={slug} key={node.document.title}>
-        <h3><Link to={slug}>{title}</Link></h3>
-        <small>{date}</small>
-        <p>
-          <small>{node.document.excerpt}</small>
-        </p>
-      </div>
-    );
-  }
 
   render () {
-    return (
-      <div id="all_posts">
-        {this.posts.map(AllPosts.process_post)}
-      </div>
-    );
+    let posts = [], tagged_posts = {};
+    posts = posts.concat(this.props.data.allAsciidoc.edges);
+    posts.forEach(p => {
+      let t = p.node.document.primary_tag;
+      if (tagged_posts.hasOwnProperty(t)) {
+        tagged_posts[t].push(p);
+      } else {
+        tagged_posts[t] = [p];
+      }
+    });
+    let res = [];
+    for (const tag in tagged_posts) {
+      if (tagged_posts.hasOwnProperty(tag)) {
+        res.push(<TagBox key={tag} tag={tag} posts={tagged_posts[tag]}/>);
+      }
+    }
+    return res;
   }
 }
 
@@ -57,7 +66,15 @@ class BlogIndex_ extends React.Component {
 
 const BlogIndex = styled(BlogIndex_)`
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
+  flex: 0 0 350px;
+  flex-flow: row;
+  flex-wrap: wrap;
+  
+  .tag_container {
+    margin: 0 1em;
+    max-width: 350px;
+  }
 `;
 
 export default BlogIndex;
@@ -79,6 +96,7 @@ export const pageQuery = graphql`
             title
             date
             excerpt
+            primary_tag
           }
         }
       }
