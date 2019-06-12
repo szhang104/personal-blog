@@ -1,17 +1,16 @@
 const path = require(`path`);
-const { createFilePath } = require(`gatsby-source-filesystem`);
+const {createFilePath} = require(`gatsby-source-filesystem`);
 const asciidoctor = require(`asciidoctor`)();
 
-
 class ReactAsciidocConverter {
-  constructor () {
+  constructor() {
     this.baseConverter = asciidoctor.Html5Converter.$new();
   }
 
-  convert (node, transform) {
-    let content = "", text = "", res = "";
-    switch(node.getNodeName()) {
-      
+  convert(node, transform) {
+    let content = '', text = '', res = '';
+    switch (node.getNodeName()) {
+
       // case "section":
       //   content = node.getContent();
       //   res = `<section>${content}</section>`;
@@ -25,8 +24,8 @@ class ReactAsciidocConverter {
       // essentially a asciidoc block
       // generate a virtual DOM according to
       // https://github.com/MatejBransky/react-katex
-      case "stem":
-      case "latexmath":
+      case 'stem':
+      case 'latexmath':
         // content = node.getContent();
         // res = katex.renderToString(content, {
         //   throwOnError: false,
@@ -39,10 +38,10 @@ class ReactAsciidocConverter {
         break;
 
 
-      // asciidoctor treats inline math as inline_quoted node.
-      // node.getContent() does not seem to work
-      // search $convert_inline_quoted in asciidoctor.js
-      case "inline_quoted":
+        // asciidoctor treats inline math as inline_quoted node.
+        // node.getContent() does not seem to work
+        // search $convert_inline_quoted in asciidoctor.js
+      case 'inline_quoted':
         if (node.type === 'latexmath' || node.type === 'stem') {
           // text = node.text;
           // res = katex.renderToString( text, {
@@ -53,22 +52,22 @@ class ReactAsciidocConverter {
           break;
         }
 
-      // default is the vanilla html5 converter
+        // default is the vanilla html5 converter
       default:
         res = this.baseConverter.convert(node, transform);
     }
-      return res;
+    return res;
   }
 }
 
 asciidoctor.ConverterFactory.register(new ReactAsciidocConverter(), ['html5']);
 
-exports.createPages = ({ graphql, actions }) => {
-  const { createPage } = actions;
+exports.createPages = ({graphql, actions}) => {
+  const {createPage} = actions;
 
   const blogPost = path.resolve(`./src/templates/blog-post.js`);
   return graphql(
-    `
+      `
       {
         allAsciidoc(
           sort: { fields: document___datetime, order: DESC }
@@ -86,17 +85,19 @@ exports.createPages = ({ graphql, actions }) => {
           }
         }
       }
-    `
+    `,
   ).then(result => {
     if (result.errors) {
-      throw result.errors
+      throw result.errors;
     }
 
     // Create blog posts pages.
     const posts = result.data.allAsciidoc.edges;
 
     posts.forEach((post, index) => {
-      const previous = index === posts.length - 1 ? null : posts[index + 1].node;
+      const previous = index === posts.length - 1 ?
+          null :
+          posts[index + 1].node;
       const next = index === 0 ? null : posts[index - 1].node;
 
       createPage({
@@ -107,22 +108,22 @@ exports.createPages = ({ graphql, actions }) => {
           previous,
           next,
         },
-      })
+      });
     });
 
-    return null
-  })
+    return null;
+  });
 };
 
-
- const onCreateNode = (arg1) => {
-  let { node, actions, getNode } = arg1;
+const onCreateNode = (arg1) => {
+  let {node, actions, getNode} = arg1;
   // modify the node that is a an asciidocpost, add a node field 'slug'
-  if (node.internal.type === `File` && [`adoc`, `asciidoc`].includes(node.extension)) {
+  if (node.internal.type === `File` &&
+      [`adoc`, `asciidoc`].includes(node.extension)) {
     return createAsciidocNode(arg1);
   }
   if (node.internal.type === `Asciidoc`) {
-    const value = createFilePath({ node, getNode });
+    const value = createFilePath({node, getNode});
     actions.createNodeField({
       name: `slug`,
       node,
@@ -131,35 +132,33 @@ exports.createPages = ({ graphql, actions }) => {
   }
 };
 
-
-
 async function createAsciidocNode({
-  node, 
-  actions,
-  pathPrefix,
-  loadNodeContent,
-  createNodeId,
-  reporter,
-  createContentDigest}) {
+                                    node,
+                                    actions,
+                                    pathPrefix,
+                                    loadNodeContent,
+                                    createNodeId,
+                                    reporter,
+                                    createContentDigest,
+                                  }) {
   const createNode = actions.createNode,
-        createParentChildLink = actions.createParentChildLink;
-
+      createParentChildLink = actions.createParentChildLink;
 
   const content = await loadNodeContent(node); // yield
   const asciidocOptions = {};
   let doc = await asciidoctor.load(content, asciidocOptions); // doc may be modified, yield
 
   try {
-      const html = doc.convert();
+    const html = doc.convert();
     // attributes are not completely parsed until after convert
     let docAttributes = doc.getAttributes();
     if (!docAttributes.hasOwnProperty('publish')) {
       return;
     }
     let pageAttributes = extractPageAttributes(docAttributes);
-      // Use "partition" option to be able to get title, subtitle, combined
+    // Use "partition" option to be able to get title, subtitle, combined
     const title = doc.getDocumentTitle({
-      partition: true
+      partition: true,
     });
 
     let revision = doc.getRevisionInfo();
@@ -168,11 +167,13 @@ async function createAsciidocNode({
     if (tags) {
       tags = tags.split(',');
       tags = tags.map((t) => t.trim());
+    } else {
+      tags = ['misc'];
     }
-      let tldr = docAttributes.tldr;
-      if (!tldr) {
-          tldr = "";
-      }
+    let tldr = docAttributes.tldr;
+    if (!tldr) {
+      tldr = '';
+    }
 
     const asciiNode = {
       id: createNodeId(`${node.id} >>> ASCIIDOC`),
@@ -189,33 +190,37 @@ async function createAsciidocNode({
         authors: authors ? authors.map(x => x.getName()) : [],
         date: docAttributes.docdate,
         datetime: docAttributes.docdatetime,
-          excerpt: tldr,
+        excerpt: tldr,
         tags: tags,
+        primary_tag: tags[0],
       },
       title,
       revision,
       authors,
       docAttributes,
-      pageAttributes
+      pageAttributes,
     };
     asciiNode.internal.contentDigest = createContentDigest(asciiNode);
     createNode(asciiNode);
     createParentChildLink({
       parent: node,
-      child: asciiNode
+      child: asciiNode,
     });
   } catch (err) {
-    reporter.panicOnBuild(`Error processing Asciidoc ${node.absolutePath ? `file ${node.absolutePath}` : `in node ${node.id}`}:\n
+    reporter.panicOnBuild(`Error processing Asciidoc ${node.absolutePath ?
+        `file ${node.absolutePath}` :
+        `in node ${node.id}`}:\n
     ${err.message}`);
   }
 }
 
-const extractPageAttributes = allAttributes => Object.entries(allAttributes).reduce((pageAttributes, [key, value]) => {
-  if (key.startsWith(`page-`)) {
-    pageAttributes[key.replace(/^page-/, ``)] = value;
-  }
+const extractPageAttributes = allAttributes => Object.entries(allAttributes).
+    reduce((pageAttributes, [key, value]) => {
+      if (key.startsWith(`page-`)) {
+        pageAttributes[key.replace(/^page-/, ``)] = value;
+      }
 
-  return pageAttributes;
-}, {});
+      return pageAttributes;
+    }, {});
 
 exports.onCreateNode = onCreateNode;
