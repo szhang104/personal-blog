@@ -150,13 +150,14 @@ async function createAsciidocNode({
   let doc = await asciidoctor.load(content, asciidocOptions); // doc may be modified, yield
 
   try {
-    const html = doc.convert(); // Use "partition" option to be able to get title, subtitle, combined
+      const html = doc.convert();
     // attributes are not completely parsed until after convert
     let docAttributes = doc.getAttributes();
     if (!docAttributes.hasOwnProperty('publish')) {
       return;
     }
     let pageAttributes = extractPageAttributes(docAttributes);
+      // Use "partition" option to be able to get title, subtitle, combined
     const title = doc.getDocumentTitle({
       partition: true
     });
@@ -168,6 +169,10 @@ async function createAsciidocNode({
       tags = tags.split(',');
       tags = tags.map((t) => t.trim());
     }
+      let tldr = docAttributes.tldr;
+      if (!tldr) {
+          tldr = "";
+      }
 
     const asciiNode = {
       id: createNodeId(`${node.id} >>> ASCIIDOC`),
@@ -184,7 +189,7 @@ async function createAsciidocNode({
         authors: authors ? authors.map(x => x.getName()) : [],
         date: docAttributes.docdate,
         datetime: docAttributes.docdatetime,
-        excerpt: "I said this",
+          excerpt: tldr,
         tags: tags,
       },
       title,
