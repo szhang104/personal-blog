@@ -316,6 +316,18 @@ hr {
   border-bottom: 1px solid black;
 }
 
+/* definition */
+dl dt{
+  margin-bottom: 0.1rem;
+  font-weight:600
+}
+dl dd{
+  margin-bottom: 0.5rem;
+}
+
+
+
+
 .gatsby-highlight {
     box-shadow: ${props => props.theme.shadow};
     font-family: 'Iosevka Web', 'monospace';
