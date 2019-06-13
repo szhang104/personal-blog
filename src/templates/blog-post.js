@@ -143,8 +143,20 @@ const PostMain = styled.main`
   width: 100%;
   
   #post_meta {
-    text-align: center;
     margin: 0 0 1em 0;
+  }
+  
+  #post_date {
+    text-align: left;
+  }
+  
+  #post_tags {
+    text-align: left;
+  }
+  
+  #post_tldr {
+    margin: 0 0 0.5em 0;
+    font-style: italic;
   }
 `;
 
@@ -186,6 +198,12 @@ class BlogPostTemplate extends React.Component {
     });
     authors = authors.concat();
     let date = new Date(post.document.date).toLocaleDateString('en-US');
+    let tags = post.document.tags.map((t, i, arr) => {
+      return (
+        <span key={t}>{t + (i < arr.length - 1 ? ', ' : '')}</span>
+      );
+    });
+    let excerpt = post.document.excerpt ? <div id={"post_tldr"}>{post.document.excerpt}</div> : null;
 
     return (
       <Layout>
@@ -196,8 +214,10 @@ class BlogPostTemplate extends React.Component {
         <PostMain id="post_main" className={this.props.className + " content"}>
           <PostTitle id='post_title'>{post.document.title}</PostTitle>
           <div id="post_meta">
-            <div>last updated: {date}</div>
-            <div>{authors}</div>
+            {excerpt}
+            <div id="post_date">last updated: {date}</div>
+            {authors.length !== 0 ? <div id="post_authors">{authors}</div> : null}
+            {tags.length !== 0 ? <div id="post_tags">{tags}</div> : null}
           </div>
           <Article inner={post.html}/>
           <NavBottom context={this.props.pageContext}/>
@@ -226,6 +246,8 @@ export const pageQuery = graphql`
         title
         authors
         date
+        tags
+        excerpt
       }
     }
   }
