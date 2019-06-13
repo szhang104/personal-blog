@@ -49,15 +49,15 @@ class Stack {
 const generate_li_key = (node, index) => {
   let prehash_str, cur_node;
   prehash_str = "";
-  // perform a Depth First Search for a child node which has a non-empty data field
+  // perform a Depth First Search over all the children of a <li> tag, concatenaing their non-empty string data
+  // as the string to perform quick hash on
   let to_visit = new Stack();
   let visited = new Set();
   to_visit.push(node);
   while (to_visit.getLength()) {
     cur_node = to_visit.pop();
     if (cur_node.data && cur_node.data !== "\n") {
-      prehash_str = cur_node.data + index.toString(); // in case two li has the same text child
-      break;
+      prehash_str += cur_node.data; // in case two li has the same text child
     }
     if (cur_node.children) {
       cur_node.children.forEach(child => {
@@ -67,11 +67,12 @@ const generate_li_key = (node, index) => {
         }
       );
     }
-    visited.add(node)
+    visited.add(node);
   }
 
   // by this point the prehash_str should be a string, possibly of zero length
   // apply the method to get a quick number
+  prehash_str += index.toString();
   let hash = 0, i, chr;
   if (prehash_str.length === 0) {
     return hash;
