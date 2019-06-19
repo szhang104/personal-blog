@@ -5,9 +5,10 @@
   "version": "0.0.1",
   "author": "Shuai Zhang <szhang104@hawk.iit.edu>",
   "dependencies": {
+    "acorn-jsx": "^5.0.1",
     "asciidoctor": "^2.0.3",
-    "gatsby": "^2.9.2",
-    "gatsby-cli": "^2.6.7",
+    "gatsby": "^2.9.4",
+    "gatsby-cli": "^2.6.10",
     "gatsby-image": "^2.1.4",
     "gatsby-plugin-manifest": "^2.1.1",
     "gatsby-plugin-offline": "^2.1.3",

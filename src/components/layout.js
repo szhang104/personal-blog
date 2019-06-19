@@ -13,42 +13,62 @@ import Header from "./header"
 import {GlobalStyle, theme} from "./common"
 import styled, {ThemeProvider} from 'styled-components';
 
-const renderMath_MathJax = () => {
-  window.MathJax.Hub.Queue([
-    "Typeset",
-    window.MathJax.Hub,
-    // this.myRef.current,
-  ]);
-};
+class ExternalScript {
+  constructor({name, url, onload, onupdate}) {
+    this.name = name;
+    this.url = url;
+    this.onload = onload;
+    if (onupdate === undefined) {
+      this.onupdate = onload;
+    } else {
+      this.onupdate = onupdate;
+    }
+  }
+}
 
-const add_prettyprint_class = () => {
-  window.jQuery("code").addClass("prettyprint");
-};
 
-const highlightjs_render = () => {
-  window.document.querySelectorAll("pre code").forEach((block) => {
-    window.hljs.highlightBlock(block);
-  });
-};
+let mathjax_es = new ExternalScript({
+  name: 'mathjax',
+  url: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML',
+  onload: ({ref}) => {
+    if (ref === undefined) {
+      window.MathJax.Hub.Queue([
+        "Typeset",
+        window.MathJax.Hub,
+      ]);
+    } else {
+      console.log(ref.current);
+      window.MathJax.Hub.Queue([
+        "Typeset",
+        window.MathJax.Hub,
+        ref.current
+      ]);
+    }
+  },
+});
+
+let jquery_es = new ExternalScript({
+  name: 'jquery',
+  url: 'https://code.jquery.com/jquery-3.4.1.min.js',
+  onload: () => {
+    window.jQuery("code").addClass("prettyprint");
+  },
+});
+
+let highlight_js_es = new ExternalScript({
+  name: 'highlight-js',
+  url: 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/highlight.min.js',
+  onload: () => {
+    window.document.querySelectorAll("pre code").forEach((block) => {
+      window.hljs.highlightBlock(block);
+    });
+  },
+});
 
 const external_scripts = [
-  {
-    name: 'jquery',
-    url: 'https://code.jquery.com/jquery-3.4.1.min.js',
-    onload: add_prettyprint_class,
-  },
-  {
-    name: 'mathjax',
-    url: "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML",
-    onload: renderMath_MathJax,
-    onupdate: renderMath_MathJax,
-  },
-  {
-    name: 'highlight-js',
-    url: 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/highlight.min.js',
-    onload: highlightjs_render,
-    onupdate: highlightjs_render,
-  },
+  jquery_es,
+  mathjax_es,
+  highlight_js_es,
 ];
 
 class PageContained_ extends React.Component {
@@ -77,7 +97,7 @@ class PageContained_ extends React.Component {
   }
 
   componentDidUpdate() {
-    this.external_scripts.forEach(s => s.onupdate && s.onupdate());
+    this.external_scripts.forEach(s => s.onupdate && s.onupdate({ref: this.myRef}));
   }
 
   render() {
